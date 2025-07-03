@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "رفع المشروع إلى GitHub",
+			"command": "git init && git add . && git commit -m \"رفع أولي للمشروع\" && git branch -M main && git remote add origin https://github.com/mugahedmotaz/habi.git && git push -u origin main",
+			"group": "build",
+			"isBackground": false
+		}
+	]
+}
