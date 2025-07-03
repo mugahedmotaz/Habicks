@@ -1,0 +1,13 @@
+node_modules/
+.env
+.DS_Store
+*.ai
+*.psd
+*.zip
+*.rar
+*.log
+firebase-debug.log
+.idea/
+.vscode/
+*.bak
+*.tmp
