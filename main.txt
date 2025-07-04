@@ -7,62 +7,58 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
-  
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="container  mx-auto bg-white rounded-xl shadow-md p-8 mt-10 md:continer md:max-auto">
-        <div class="sticky top-0 z-10 bg-white pb-4 mb-4">
-            <div class="flex flex-col items-center mb-4">
-                <img src="./Untitled-1.png" alt="شعار الموقع" class="mb-20  " loading="lazy" />
-                <h1 class="text-3xl font-bold text-center text-green-800 mb-2">تتبع إنجازاتي اليومية</h1>
-            </div>
-            <div id="golden-habits" class="mb-2"></div>
-            <div id="tabs" class="flex gap-2 mb-2 justify-center">
-                <button class="tab-btn bg-gray-200 px-3 py-1 rounded" data-period="day">اليوم</button>
-                <button class="tab-btn bg-gray-200 px-3 py-1 rounded" data-period="week">الأسبوع</button>
-                <button class="tab-btn bg-gray-200 px-3 py-1 rounded" data-period="month">الشهر</button>
-            </div>
-            <form id="add-habit-form" class="flex flex-col md:flex-row gap-3 mb-2">
-                <input type="text" id="habit-name" placeholder="ماذا أنجزت اليوم؟" required class="flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400" />
-                <input type="text" id="habit-desc" placeholder="كيف أنجزتها؟ (اختياري)" class="flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none" />
-                <select id="habit-type" class="px-3 py-2 rounded-md border border-gray-300 focus:outline-none">
-                    <option value="رياضة">🏃‍♂️ رياضة</option>
-                    <option value="قراءة">📚 قراءة</option>
-                    <option value="شرب الماء">💧 شرب الماء</option>
-                    <option value="نوم مبكر">🛌 نوم مبكر</option>
-                    <option value="تأمل">🧘‍♂️ تأمل</option>
-                    <option value="أخرى">✨ أخرى</option>
-                </select>
-                <button type="submit" class="bg-green-700 hover:bg-green-800 text-white font-bold px-4 py-2 rounded-md">سجّل الإنجاز</button>
-            </form>
-            <div class="flex flex-col md:flex-row gap-2 mb-4 items-center justify-between">
-                <input type="date" id="search-date" class="px-2 py-1 rounded border border-gray-300" />
-                <input type="text" id="search-query" placeholder="ابحث عن عادة..." class="px-2 py-1 rounded border border-gray-300" />
-                <button id="search-btn" class="bg-blue-600 text-white px-3 py-1 rounded">بحث</button>
-                <button id="reset-search" class="bg-gray-300 px-3 py-1 rounded">إظهار الكل</button>
-            </div>
-        </div>
-        <div class="overflow-x-auto">
-            <div id="habit-21-table" class="mb-8"></div>
-            <div id="habit-list" class="space-y-4"></div>
+    <div class="container max-w-lg mx-auto bg-white rounded-xl shadow-md p-8 mt-10">
+        <h1 class="text-3xl font-bold text-center text-green-800 mb-8">تتبع إنجازاتي اليومية</h1>
+        <form id="add-habit-form" class="flex flex-col md:flex-row gap-3 mb-8">
+            <input type="text" id="habit-name" placeholder="ماذا أنجزت اليوم؟" required class="flex-1 px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400" />
+            <select id="habit-type" class="px-3 py-2 rounded-md border border-gray-300 focus:outline-none">
+                <option value="رياضة">🏃‍♂️ رياضة</option>
+                <option value="قراءة">📚 قراءة</option>
+                <option value="شرب الماء">💧 شرب الماء</option>
+                <option value="نوم مبكر">🛌 نوم مبكر</option>
+                <option value="تأمل">🧘‍♂️ تأمل</option>
+                <option value="أخرى">✨ أخرى</option>
+            </select>
+            <button type="submit" class="bg-green-700 hover:bg-green-800 text-white font-bold px-4 py-2 rounded-md">سجّل الإنجاز</button>
+        </form>
+        <div id="habit-list" class="space-y-4">
+            <!-- سيتم عرض الإنجازات هنا -->
         </div>
     </div>
-    <script>
-const habitIcons = {
-    'رياضة': '<i class="fa-solid fa-person-running text-green-600"></i>',
-    'قراءة': '<i class="fa-solid fa-book-open text-blue-600"></i>',
-    'شرب الماء': '<i class="fa-solid fa-glass-water-droplet text-cyan-500"></i>',
-    'نوم مبكر': '<i class="fa-solid fa-bed text-purple-600"></i>',
-    'تأمل': '<i class="fa-solid fa-spa text-pink-500"></i>',
-    'أخرى': '<i class="fa-solid fa-star text-yellow-500"></i>',
+    <!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script>
+// إعدادات مشروعك من Firebase (استبدل القيم بما يظهر لك في Firebase Console)
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-function loadHabits() {
-    const data = localStorage.getItem('habit_logs');
-    return data ? JSON.parse(data) : [];
+// استبدال دوال التخزين
+async function loadHabits() {
+    const snapshot = await db.collection('habits').orderBy('id', 'desc').get();
+    return snapshot.docs.map(doc => doc.data());
 }
-function saveHabits(habits) {
-    localStorage.setItem('habit_logs', JSON.stringify(habits));
+async function saveHabits(habits) {
+    // حذف كل العادات القديمة ثم إضافة الجديدة (حل بسيط)
+    const batch = db.batch();
+    const ref = db.collection('habits');
+    const old = await ref.get();
+    old.forEach(doc => batch.delete(doc.ref));
+    habits.forEach(h => batch.set(ref.doc(h.id+''), h));
+    await batch.commit();
 }
 function getPeriodStart(period) {
     const now = new Date();
@@ -313,13 +309,13 @@ function renderHabitsDashboard(habits) {
         };
     });
 }
-document.getElementById('add-habit-form').addEventListener('submit', function(e) {
+document.getElementById('add-habit-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const name = document.getElementById('habit-name').value.trim();
     const desc = document.getElementById('habit-desc').value.trim();
     const type = document.getElementById('habit-type').value;
     if (!name) return;
-    const habits = loadHabits();
+    const habits = await loadHabits();
     const now = new Date();
     habits.unshift({
         id: Date.now(),
@@ -330,7 +326,7 @@ document.getElementById('add-habit-form').addEventListener('submit', function(e)
         dateObj: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
         time: now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })
     });
-    saveHabits(habits);
+    await saveHabits(habits);
     this.reset();
     renderAll();
 });
@@ -351,8 +347,8 @@ function renderAll() {
     renderHabitsDashboard(habits);
     renderGoldenHabits(habits);
 }
-document.addEventListener('DOMContentLoaded', function() {
-    const habits = loadHabits();
+document.addEventListener('DOMContentLoaded', async function() {
+    const habits = await loadHabits();
     renderHabitsDashboard(habits);
     renderGoldenHabits(habits);
     render21Table(habits);
@@ -392,10 +388,10 @@ function renderSearchedHabitsTable(habits) {
     });
     container.innerHTML = html;
 }
-document.getElementById('search-btn').onclick = function() {
+document.getElementById('search-btn').onclick = async function() {
     const dateVal = document.getElementById('search-date').value;
     const query = document.getElementById('search-query').value.trim();
-    let habits = loadHabits().map(h => ({...h, dateObj: h.dateObj ? new Date(h.dateObj) : new Date(new Date(h.date).getFullYear(), new Date(h.date).getMonth(), new Date(h.date).getDate())}));
+    let habits = await loadHabits();
     // فقط العادات التي لها وصف
     let describedHabits = habits.filter(h => h.desc && h.desc.length > 0);
     if (dateVal) {
